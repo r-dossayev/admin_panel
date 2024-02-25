@@ -1,5 +1,5 @@
 <?php
-
+require_once 'Review.php';
 if (!isset($_POST['email']) || !isset($_POST['password'])) {
     session_start();
     $_SESSION['admin'] = false;
@@ -11,7 +11,8 @@ if ($_POST['email'] == 'admin@gmail.com' && $_POST['password'] == 'admin') {
     session_start();
     $_SESSION['admin'] = true;
     $result['status'] = true;
-    $result['email'] = $_POST['email'];
+    $reviews = Review::getReviews();
+    $result['reviews'] = $reviews;
     echo json_encode($result);
     http_response_code(200);
     die();

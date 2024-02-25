@@ -82,6 +82,7 @@ class Review
         return $this;
     }
 
+
     public function getImagePath(): string
     {
         return "uploads/" . $this->image;

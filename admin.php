@@ -17,12 +17,13 @@ $admin_password = "admin";
 <div class="container mt-3 ">
     <div class="row ">
         <div class="col-12">
-            <!-- Button trigger modal -->
-<!--            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">-->
-<!--                Launch demo modal-->
-<!--            </button>-->
-ssss
-            <!-- Modal -->
+            <h1>Admin Panel</h1>
+            <div class="row ">
+                <div class="col-12">
+                    <div id="reviews" class="mt-3">
+                </div>
+                </div>
+
             <div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -71,7 +72,12 @@ ssss
                     console.log(response);
                     let result = JSON.parse(response);
                     if (result.status) {
+                        let reviews = result.reviews;
+                        reviews.forEach(review => {
+                            $('#reviews').append(reviewCard(review));
+                        });
                         modal.hide();
+
                     }
                 },
                 error: function (response) {
@@ -80,6 +86,22 @@ ssss
             });
         });
     });
+        const reviewCard = (review) => {
+        return `
+       <div class="card d-flex flex-row mt-4" style="width: 100%">
+              <div>
+                  <img src="uploads/${review.image}" class="card-img-top" alt="..." width="100" height="200">
+              </div>
+              <div class="card-body">
+                  <h5 class="card-title">${review.name}</h5>
+                  <p class="card-text">${review.message}</p>
+                  <p class="card-text">Status: ${review.isActive? 'Active': 'Not Active'}</p>
+                  <a href="showReview.php?review_id=${review.id}" class="btn btn-primary">Show</a>
+              </div>
+          </div>
+        `;
+
+        }
 
 </script>
 

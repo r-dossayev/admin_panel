@@ -1,6 +1,6 @@
 <?php
 
-
+require_once 'Review.php';
 
 class ReviewService
 {
@@ -11,7 +11,7 @@ class ReviewService
         $this->connection = new PDO("mysql:host=localhost;dbname=aiplus_db;", "root", "");
     }
 
-    public function save(Review $review):bool
+    public function save(Review $review): bool
     {
         $sql = "INSERT INTO reviews (name, email, message, image) VALUES (:name, :email, :message, :image)";
         $stmt = $this->connection->prepare($sql);
@@ -33,13 +33,18 @@ class ReviewService
         return $res;
     }
 
-    public function getReview($id)
+    public function getReview($id): Review
     {
         $sql = "SELECT * FROM reviews WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        // $isChanged = 0, $isActive = 0, $isDeleted = 0
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        return new Review($res['id'], $res['name'], $res['email'], $res['message'],
+            $res['image'], $res['is_changed'] , $res['is_active'], $res['is_deleted']
+
+        );
     }
 
     public function getReviews(): array
@@ -64,15 +69,20 @@ class ReviewService
         return $res;
     }
 
-    public function updateReview(Review $review):bool
+    public function updateReview(Review $review): bool
     {
-        $sql = "UPDATE reviews SET name = :name, email = :email, message = :message, image = :image WHERE id = :id";
+        $sql = "UPDATE reviews SET name = :name, email = :email, message = :message,  is_active = :isActive,
+        is_deleted = :isDeleted, is_changed = :isChanged
+WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(':id', $review->id);
         $stmt->bindParam(':name', $review->name);
         $stmt->bindParam(':email', $review->email);
         $stmt->bindParam(':message', $review->message);
-        $stmt->bindParam(':image', $review->image);
+        $stmt->bindParam(':isActive', $review->isActive);
+        $stmt->bindParam(':isDeleted', $review->isDeleted);
+        $stmt->bindParam(':isChanged', $review->isChanged);
+
         $stmt->execute();
         if ($stmt->rowCount() > 0) {
             return true;
