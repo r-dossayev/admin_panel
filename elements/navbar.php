@@ -12,6 +12,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="new_review.php">Review</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="admin.php">Admin</a>
+            </li>
         </ul>
     </div>
 </nav>
